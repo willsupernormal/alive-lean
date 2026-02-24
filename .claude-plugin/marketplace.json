@@ -1,10 +1,13 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "alive-lean",
-  "version": "1.0.0",
-  "description": "ALIVE context infrastructure — lean edition",
   "owner": {
     "name": "Will Bainbridge"
+  },
+  "metadata": {
+    "description": "Persistent memory for Claude Code. File-based context infrastructure that gives Claude memory across sessions.",
+    "version": "4.0.0",
+    "homepage": "https://github.com/willsupernormal/alive-lean"
   },
   "plugins": [
     {
