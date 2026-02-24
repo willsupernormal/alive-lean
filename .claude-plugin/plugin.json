@@ -1,0 +1,19 @@
+{
+  "name": "alive-lean",
+  "version": "4.0.0",
+  "description": "Persistent memory for Claude Code — lean edition. No manifest, less bloat, same power.",
+  "author": {
+    "name": "Will Bainbridge"
+  },
+  "license": "MIT",
+  "keywords": [
+    "context",
+    "memory",
+    "productivity",
+    "state-management",
+    "workflow",
+    "persistent-context",
+    "second-brain-ai",
+    "claude-plugin"
+  ]
+}
