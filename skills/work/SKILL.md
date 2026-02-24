@@ -10,6 +10,8 @@ Focus on ONE venture, experiment, life area, or project. Load context from its `
 
 **Different from `/alive:daily`:** Work focuses on ONE unit. Daily shows EVERYTHING.
 
+**UI:** Read `templates/ui-standards.md` for shell format and theme.
+
 ## UI Treatment
 
 Uses the **ALIVE Shell** — one rounded box, three zones.
@@ -153,15 +155,14 @@ cd ~/Desktop/alive/04_Ventures/acme-agency/
   └─ Working directory set
 ```
 
-## Step 3: Load Context (MANDATORY — All 4 Files)
+## Step 3: Load Context (MANDATORY — All 3 Files)
 
-**You MUST read all 4 files. Do not skip any.**
+**You MUST read all 3 files. Do not skip any.**
 
 Read in order:
 1. `{unit}/_brain/status.md` — Unit summary and state of play
 2. `{unit}/_brain/tasks.md` — Work queue
-3. `{unit}/_brain/manifest.json` — Structure map
-4. `{unit}/_brain/changelog.md` — **First 200 lines** (recent session history)
+3. `{unit}/_brain/changelog.md` — **First 200 lines** (recent session history)
 
 **The changelog is CRITICAL.** It contains:
 - What happened in recent sessions
@@ -179,9 +180,6 @@ Read in order:
 ▸ reading 04_Ventures/acme/_brain/tasks.md
   └─ 7 tasks, 2 @urgent
 
-▸ reading 04_Ventures/acme/_brain/manifest.json
-  └─ 12 files tracked, 3 references
-
 ▸ reading 04_Ventures/acme/_brain/changelog.md (first 200 lines)
   └─ Last session: 2026-02-04 — Plugin UI updates
 ```
@@ -191,11 +189,19 @@ Read in order:
 Read(file_path: "{unit}/_brain/changelog.md", limit: 200)
 ```
 
-**References:** If the manifest has a `references` array, mention the count to the user (e.g. "3 reference docs available"). Don't load the files — just surface awareness. Users can ask to read specific references on demand.
+**Handoff detection:**
+- Glob `_working/sessions/handoff-*.md`
+- For each match, read YAML front matter to get `session_id`, `date`, `description`
+- Present handoffs to user as before
+
+**Reference awareness:**
+- Glob `_references/**/*.md` (exclude files in `raw/` directories)
+- Count matches and mention: "X reference docs available"
+- Don't load the files — just surface awareness. Users can ask to read specific references on demand.
 
 ## Step 4: Check Freshness
 
-Check `updated` date in manifest.json or file timestamps:
+Read `_brain/status.md` YAML front matter `updated` date. Apply staleness rules:
 
 | Age | Action |
 |-----|--------|
@@ -214,26 +220,11 @@ Check `updated` date in manifest.json or file timestamps:
 
 Handoffs are part of the overview, not a blocking gate. But they should be **prominent** — a pending handoff means a previous session left unfinished work, and the user should know about it.
 
-### Check manifest.handoffs[]
+### Check for Pending Handoffs
 
-After loading `manifest.json` in Step 3, check the `handoffs` array:
+Handoffs are detected via Glob in Step 3. If any `_working/sessions/handoff-*.md` files were found, each one represents an unfinished session with context that would otherwise be lost.
 
-```json
-{
-  "handoffs": [
-    {
-      "session_id": "abc12345",
-      "date": "2026-02-02",
-      "reason": "pre-compact",
-      "thread": "ongoing",
-      "file": "_working/sessions/plugin-feedback-abc12345-2026-02-02.md",
-      "summary": "Brief description of what was in progress"
-    }
-  ]
-}
-```
-
-Each entry represents an unfinished session with context that would otherwise be lost.
+Use the YAML front matter from each handoff file (`session_id`, `date`, `description`) to display the handoff details.
 
 ### Summary Display
 
@@ -265,15 +256,15 @@ Each entry represents an unfinished session with context that would otherwise be
 │  1) continue current task  +) add a new task             │
 │  s) save and exit session  w) open a working file        │
 │                                                          │
-│  7 total · 2 done · 3 working files · last: yesterday    │
+│  7 total · 2 done · last: yesterday                       │
 │                                                          │
 ╰──────────────────────────────────────────────────────────╯
 ```
 
 **Key details:**
 - Show the `[!]` flag to draw attention
-- Include the `summary` from each handoff entry so the user knows what's in each one
-- Show the `reason` (context compact, resuming later) and `date`
+- Include the `description` from each handoff's YAML front matter so the user knows what's in each one
+- Show the `date` from front matter
 - Handoffs appear BEFORE tasks — they represent prior work that may be more relevant than the task list
 
 **If no handoffs:** Omit the HANDOFFS section entirely. Don't show "0 handoffs".
@@ -305,14 +296,13 @@ Tasks and handoffs appear in the main content zone (see Summary Display above). 
 When the user picks a handoff (e.g. `r1` or "resume the plugin feedback session"):
 
 1. **Read the handoff document** into memory
-2. **Archive immediately** — move file to `01_Archive/{unit-path}/sessions/` and remove from `manifest.handoffs[]`:
+2. **Archive immediately** — move file to `01_Archive/{unit-path}/_working/sessions/`:
    ```
    ▸ loading handoff...
-     └─ Reading _working/sessions/plugin-feedback-abc12345-2026-02-02.md
+     └─ Reading _working/sessions/handoff-abc12345-2026-02-02.md
 
    ▸ archiving handoff (already read)...
-     └─ Moving to 01_Archive/{unit-path}/sessions/
-     └─ Removing from manifest.handoffs[]
+     └─ Moving to 01_Archive/{unit-path}/_working/sessions/
 
    ✓ Handoff archived — context loaded
    ```
@@ -321,7 +311,7 @@ When the user picks a handoff (e.g. `r1` or "resume the plugin feedback session"
 
 **Why archive immediately?** The handoff's job is done once read. "Archive later" gets forgotten 100% of the time. Archive on read = 100% adherence.
 
-**If user picks a task instead of a handoff:** Proceed normally. Handoffs stay in manifest until explicitly resumed or cleaned up by `/alive:sweep`.
+**If user picks a task instead of a handoff:** Proceed normally. Handoff files remain in `_working/sessions/` until explicitly resumed or cleaned up by `/alive:sweep`.
 
 ## Edge Cases
 

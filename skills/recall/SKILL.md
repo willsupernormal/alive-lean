@@ -8,21 +8,7 @@ plugin_version: "3.1.0"
 
 Quick context lookup. Find past decisions, sessions, insights, or files.
 
-## UI Treatment
-
-Uses the **ALIVE Shell** — Tier 3: Utility.
-
-```
-╭──────────────────────────────────────────────────────────╮
-│  ALIVE · recall                         [search-query]    │
-│  ──────────────────────────────────────────────────────── │
-│  [Search results with sources]                            │
-│  ──────────────────────────────────────────────────────── │
-│  [Result count + search path]                             │
-╰──────────────────────────────────────────────────────────╯
-```
-
-See `rules/ui-standards.md` for shell format, logo assets, and tier specifications.
+**UI:** Read templates/ui-standards.md for shell format and theme.
 
 ---
 
@@ -39,14 +25,13 @@ Trigger on past-tense recall intent:
 
 Always search the **current unit first**. If no unit is loaded, ask which one.
 
-Within the unit, check these locations in order:
+Within the unit, search these locations in order using Grep:
 
 | Priority | Location | What's There |
 |----------|----------|--------------|
-| 1 | `_brain/manifest.json` | File index, reference summaries, structure |
-| 2 | `_brain/changelog.md` | Decisions, session history, what happened |
-| 3 | `_references/**/*.md` | Summaries of emails, calls, articles (read YAML front matter, skip raw/) |
-| 4 | `_brain/insights.md` | Domain knowledge |
+| 1 | `_brain/` files | status.md, tasks.md, changelog.md, insights.md — decisions, session history, domain knowledge |
+| 2 | `_references/**/*.md` (exclude `raw/`) | Summaries of emails, calls, articles — search YAML front matter and content |
+| 3 | `_working/` files | Drafts, plans, work in progress |
 
 **Stop as soon as you find what they're looking for.** Don't search everything just because you can.
 
@@ -58,7 +43,7 @@ Reference files have YAML front matter that acts as a quick index. When searchin
 ---
 type: email | call | screenshot | document | article | message
 date: 2026-02-06
-summary: One-line description of what this reference contains
+description: One-line description of what this reference contains
 source: Where it came from (person name, tool, etc.)
 participants: [Will, Ben, Jono]     # calls/meetings
 from: sender@email.com              # emails
@@ -69,7 +54,7 @@ tags: [keyword, keyword, keyword]
 ---
 ```
 
-**Scan the `summary`, `tags`, `subject`, and `source` fields for matches.** These are designed to be searchable without reading the full file body. Only read below the front matter if the user asks to see more detail.
+**Scan the `description`, `tags`, `subject`, and `source` fields for matches.** These are designed to be searchable without reading the full file body. Only read below the front matter if the user asks to see more detail.
 
 ## Output
 
@@ -83,10 +68,10 @@ Show the ALIVE UI wrapper, the breadcrumb trail of where you looked, and the res
 │                                                                                          │
 │  ──────────────────────────────────────────────────────────────────────────────────────  │
 │                                                                                          │
-│  ▸ searching 04_Ventures/acme/_brain/manifest.json                                       │
-│    └─ no file matches                                                                    │
-│  ▸ searching 04_Ventures/acme/_brain/changelog.md                                        │
-│    └─ 2 matches                                                                          │
+│  ▸ searching 04_Ventures/acme/_brain/                                                    │
+│    └─ changelog.md: 2 matches                                                            │
+│  ▸ searching 04_Ventures/acme/_references/                                               │
+│    └─ no matches                                                                         │
 │                                                                                          │
 │  FOUND                                                                                   │
 │  ──────────────────────────────────────────────────────────────────────────────────────  │
@@ -118,7 +103,7 @@ If the user asks a recall question with no unit context loaded:
 ## No Results
 
 ```
-▸ searched manifest, changelog, references, insights
+▸ searched _brain/, _references/, _working/
   └─ no matches for "quantum computing"
 
 [w] Search all units    [a] Try different terms
@@ -126,7 +111,7 @@ If the user asks a recall question with no unit context loaded:
 
 ## Wider Search
 
-When user picks `[w]`, search `_brain/changelog.md` and `_brain/manifest.json` across all units in `04_Ventures/` and `05_Experiments/`. Show which ones had hits.
+When user picks `[w]`, use Grep to search `_brain/` files across all units in `04_Ventures/`, `05_Experiments/`, and `02_Life/`. Show which ones had hits.
 
 ## Related Skills
 

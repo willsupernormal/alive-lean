@@ -10,7 +10,7 @@ Capture context into ALIVE. User gives you content — you understand it, confir
 
 ## UI Treatment
 
-Uses the **ALIVE Shell** — Tier 3: Utility. See `rules/ui-standards.md` for shell format and logo assets.
+**UI:** Read `templates/ui-standards.md` for shell format and theme. Tier 3: Utility.
 
 ---
 
@@ -54,15 +54,16 @@ The user has context they want in the system. It might be a quick thought, a pas
 | Check | Why |
 |-------|-----|
 | Active unit (from `/alive:work`) | Default routing destination |
-| `{unit}/_brain/manifest.json` | Know what areas exist, existing references |
+| Glob `{unit}/*/` | Know what areas/folders exist for routing |
+| Glob `{unit}/_references/**/*.md` (exclude `raw/`) | Existing references count |
 | `{unit}/_brain/status.md` | Unit summary — informs relevance |
 | `02_Life/people/` listing | Check for existing person files before creating |
 
 ```
 ▸ loading context...
   └─ Active: 04_Ventures/acme
-  └─ Areas: clients/, content/, partnerships/
-  └─ References: 3 existing in _references/
+  └─ Areas: clients/, content/, partnerships/  (from directory scan)
+  └─ References: 3 existing in _references/  (from glob)
   └─ Focus: "Closing Q1 deals"
   └─ People: 47 files in 02_Life/people/
 ```
@@ -76,7 +77,7 @@ If no unit is active, scan units for keyword matches to suggest routing.
 ```
 Content received
     ↓
-Context check (unit, manifest, people)
+Context check (unit, folders, people)
     ↓
 Identify (content type, unit match, people)
     ↓
@@ -95,7 +96,7 @@ Confirm done + note pending action
 
 **Every capture follows this flow.** Whether it's a one-line decision or a 50-message email thread, the same steps apply. The system adjusts depth based on content complexity, but the flow is always: identify → confirm intent → confirm storage → execute.
 
-**Manifest is NOT updated here.** The `/alive:save` skill handles manifest updates at session end.
+**No bookkeeping here.** This skill stores files. The `/alive:save` skill handles session-level bookkeeping.
 
 ---
 
@@ -117,7 +118,7 @@ Detect content type, match to unit, identify people mentioned.
 ```
 ▸ identifying...
   └─ Type: Email from Sarah Chen (Globex)
-  └─ Unit match: 04_Ventures/acme (Globex in manifest)
+  └─ Unit match: 04_Ventures/acme (Globex found in status.md)
   └─ Person: Sarah Chen — found in 02_Life/people/sarah-chen.md
 ```
 
@@ -260,7 +261,7 @@ Every reference follows the same pattern regardless of content type:
 
 1. **Summary `.md` file** sits at the type folder root — contains YAML front matter, a detailed AI summary, and a `## Source` pointer to the raw file
 2. **Raw file** lives in `raw/` subfolder — preserves the original content exactly as received
-3. **Three-tier access** — manifest index (what exists) → summary .md (detailed understanding) → raw file (original content)
+3. **Two-tier access** — summary .md (YAML front matter + detailed understanding) → raw file (original content). Discover references by globbing `_references/**/*.md` (exclude `raw/`).
 
 | Content | Summary File | Raw File |
 |---------|-------------|----------|
@@ -317,7 +318,7 @@ their board. John (CTO) will be the technical lead on their side.
 |-------|-------------|
 | `type` | Content kind: email, call, screenshot, message, article, note, document |
 | `date` | When created/received (ISO format: YYYY-MM-DD) |
-| `description` | One-line description — this is what appears in the manifest index |
+| `description` | One-line description of the content |
 
 **Likely required:**
 
@@ -380,17 +381,16 @@ Summary files and raw files share the same base name with different extensions:
 
 **Rename garbage filenames.** When source files have auto-generated or meaningless names (e.g. `CleanShot 2026-02-06 at 14.32.07@2x.png`, `IMG_4521.jpg`, `document (3).pdf`), rename them to the `YYYY-MM-DD-descriptive-name.ext` convention before storing. The summary `.md` and raw file should always share the same base name.
 
-### Three-Tier Access
+### Two-Tier Access
 
 References are designed for efficient access without context bloat:
 
 ```
-Tier 1: manifest.json        → "What references exist?" (always loaded)
-Tier 2: Summary .md file      → "Tell me more about this one" (front matter + detailed AI summary)
-Tier 3: raw/ file             → "Give me the original" (full text or binary, on demand)
+Tier 1: Summary .md file      → "What is this?" (YAML front matter + detailed AI summary)
+Tier 2: raw/ file             → "Give me the original" (full text or binary, on demand)
 ```
 
-The manifest holds a lightweight index. Summary `.md` files hold rich metadata and a detailed AI summary (usually sufficient). Raw files in `raw/` only load when the original content is specifically needed.
+To discover what references exist, glob `_references/**/*.md` (exclude `raw/`). Summary `.md` files hold rich metadata and a detailed AI summary (usually sufficient). Raw files in `raw/` only load when the original content is specifically needed.
 
 ---
 
@@ -500,8 +500,6 @@ Pending action: Write response to Sarah's email
 
 **The pending action line only appears if the user selected an action in Step 2.** After the skill exits, proceed with the action.
 
-**Manifest is updated later by `/alive:save`**, not by this skill. The save skill will detect new files in `_references/` and add them to the manifest's `references` array.
-
 ---
 
 ## Finished Artifacts vs Reference Material
@@ -557,13 +555,6 @@ Which fits best?
 ---
 
 ## Fallbacks
-
-**No manifest.json:**
-```
-▸ no manifest found, scanning folders...
-  └─ Found: clients/, content/, _working/, _references/
-```
-Use actual folder structure for routing suggestions.
 
 **No _references/ folder:**
 ```

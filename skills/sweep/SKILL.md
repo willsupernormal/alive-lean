@@ -8,22 +8,7 @@ plugin_version: "3.1.0"
 
 Audit the ALIVE system for structural compliance, stale content, and cleanup opportunities. Uses sub-agents for thorough analysis without overloading context.
 
-## UI Treatment
-
-Uses the **ALIVE Shell** — Tier 3: Utility.
-
-```
-╭──────────────────────────────────────────────────────────╮
-│  ALIVE · sweep                          [date]            │
-│  [N] stale  ·  [N] actionable                             │
-│  ──────────────────────────────────────────────────────── │
-│  [Stale items with recommendations]                       │
-│  ──────────────────────────────────────────────────────── │
-│  [ACTIONS]                                                │
-╰──────────────────────────────────────────────────────────╯
-```
-
-See `rules/ui-standards.md` for shell format, logo assets, and tier specifications.
+**UI:** Read templates/ui-standards.md for shell format and theme.
 
 ---
 
@@ -169,7 +154,7 @@ You are auditing an ALIVE unit for structural compliance and health.
 UNIT: {unit_path}
 
 Run ALL of the following checks and return your findings as a structured report.
-Be thorough — read actual files, check actual timestamps, compare actual disk contents against manifest.
+Be thorough — read actual files, check actual timestamps, verify YAML front matter on all .md files.
 
 ---
 
@@ -183,7 +168,6 @@ Check that these exist:
 - [ ] _brain/tasks.md
 - [ ] _brain/insights.md
 - [ ] _brain/changelog.md
-- [ ] _brain/manifest.json
 - [ ] _working/ folder exists
 - [ ] _references/ folder exists
 
@@ -211,46 +195,25 @@ Check for:
 
 Report: STATUS_STRUCTURE: {finding}
 
-## C. Manifest Reconciliation (Safety Net for Missed Saves)
+## C. Front Matter Audit
 
-**This is critical.** If a save was forgotten or interrupted, files may exist on disk but not in the manifest. The manifest must reflect reality.
+Scan all `.md` files in the unit to verify YAML front matter health:
 
-Read _brain/manifest.json and do a FULL reconciliation against what actually exists on disk.
+1. **Missing front matter:** Flag files with no YAML front matter block at all
+   - Use `Glob {unit_path}/**/*.md` to find all markdown files
+   - Read the top of each file — check for `---` delimited YAML block
+   - Report: NO_FRONTMATTER: {path} — no YAML front matter found
 
-1. **Ghost entries:** Files listed in manifest that DON'T exist on disk
-   - Check every path in areas[].files[], working_files[], key_files[]
-   - Report: GHOST: {path} listed in manifest but missing from disk
+2. **Missing required fields:** Check front matter against location-based requirements:
+   - `_brain/` files need: `updated`, `session_ids`
+   - `_working/` files need: `description`, `created`, `modified`, `session_ids`
+   - `_references/` summary files (exclude `raw/`) need: `type`, `date`, `description`, `source`, `tags`
+   - Report: MISSING_FIELD: {path} — missing {field(s)}
 
-2. **Untracked files (the big one):** Files on disk NOT listed in manifest
-   - List ALL files in the unit recursively (excluding .claude/, _brain/, .DS_Store, Icon files)
-   - Compare against ALL manifest entries (areas[].files[], working_files[], key_files[])
-   - For each untracked file:
-     a. Read the file to understand its contents
-     b. Determine where it belongs in the manifest:
-        - In _working/ → should be in working_files[]
-        - In an folder → should be in that area's files[]
-        - At unit root → should be in key_files[] or flagged as orphan
-     c. Generate a proposed manifest entry with description, date_created, date_modified, session_ids
-   - Report: UNTRACKED: {path} — proposed entry: {"path": "{path}", "description": "{generated description}", "date_created": "{date}", "date_modified": "{date}", "session_ids": []}
+3. **Stale dates:** Flag files where `modified` or `updated` is >4 weeks old
+   - Report: STALE_FRONTMATTER: {path} — {field} is {age} days old
 
-3. **Stale descriptions:** Files where the manifest description seems wrong
-   - Read the file, compare to manifest description
-   - Report: STALE_DESC: {path} — manifest says "{old}" but file is about "{actual}"
-
-4. **Folder list accuracy:** Does manifest.folders[] match actual folders on disk?
-   - Folders on disk not in manifest.folders[] → MISSING_FOLDER
-   - Folders in manifest.folders[] not on disk → GHOST_FOLDER
-
-5. **Area accuracy:** Do manifest.areas[] match actual area folders?
-   - Area folders on disk not in manifest.areas[] → MISSING_AREA
-   - Areas in manifest.areas[] not on disk → GHOST_AREA
-
-6. **Missing file metadata:** Check all file entries in manifest for required fields
-   - Every file entry (in areas[].files[], working_files[], key_files[]) must have: `date_created`, `date_modified`, `session_ids` (array)
-   - Report: MISSING_METADATA: {path} — missing {field(s)} (e.g. "missing date_created, date_modified")
-   - Also check unit root manifest fields: must have `goal`, `session_ids` (array, not singular `session_id`)
-   - Report: LEGACY_FIELD: manifest root has `session_id` (singular) — should be `session_ids` (array)
-   - Report: MISSING_GOAL: manifest root is missing `goal` field
+4. **Report summary:** "X files audited, Y missing front matter, Z with missing fields, W with stale dates"
 
 ## D. _brain/ Freshness
 
@@ -263,10 +226,10 @@ For each _brain/ file, check the last updated date:
 | > 28 days | VERY_STALE |
 
 Check:
-- status.md — look for **Updated:** date
-- tasks.md — look for most recent [x] done date
-- changelog.md — look for most recent ## date header
-- manifest.json — check "updated" field
+- status.md — look for **Updated:** date or `updated` in front matter
+- tasks.md — look for most recent [x] done date or `updated` in front matter
+- changelog.md — look for most recent ## date header or `updated` in front matter
+- insights.md — look for most recent entry date or `updated` in front matter
 
 Report: {file}: {age} days — {OK|STALE|VERY_STALE}
 
@@ -309,8 +272,9 @@ List all files in _working/ and check:
    - Report: EVOLVE: {prefix} — {count} related files, consider promoting to folder
 
 4. **Sessions cleanup:** Check _working/sessions/ for old handoff files
-   - Any file here that is NOT referenced in manifest.handoffs[] is orphaned
-   - Report: ORPHAN_HANDOFF: {filename}
+   - Use `Glob _working/sessions/handoff-*.md` to find handoffs
+   - Check each handoff's front matter date — if >14 days old, flag as stale
+   - Report: STALE_HANDOFF: {filename} — {age} days old
 
 ## H. Orphaned & Misplaced Files
 
@@ -336,9 +300,10 @@ Check for files that shouldn't be where they are:
 
 ## I. Nested Project Check
 
-For any area with has_projects: true in manifest:
-- Check that each nested project has its own _brain/, _working/, and _references/
-- Check that nested projects DON'T use the parent's _working/
+Scan for nested folders that contain `_brain/` (indicating a project):
+- Use `Glob {unit_path}/**/_brain/` to find nested projects
+- Check that each nested project also has `_working/` and `_references/`
+- Check that nested projects DON'T store drafts in the parent's `_working/`
 
 ## J. _references/ Folder Audit
 
@@ -353,20 +318,13 @@ Each type subfolder (emails/, calls/, meeting-transcripts/, etc.) should have su
    - Exception: `notes/` type may not always need raw files
 
 3. **Front matter validation:** Every summary `.md` must have valid YAML front matter
-   - Required: `type`, `date`, `summary`
+   - Required: `type`, `date`, `description`, `source`, `tags`
    - Must have `## Source` section pointing to raw file
    - Report: BAD_FRONTMATTER: {filename} — missing {field}
    - Report: NO_FRONTMATTER: {filename} — no YAML front matter found
    - Report: NO_SOURCE: {filename} — missing ## Source pointer to raw file
 
-4. **Orphaned references:** Summary .md files not tracked in manifest's `references` array
-   - Compare disk contents against manifest.references[].path
-   - Report: ORPHAN_REF: {filename} exists in _references/ but not in manifest references[]
-
-5. **Missing references:** Entries in manifest's `references` array where the file doesn't exist on disk
-   - Report: GHOST_REF: {path} listed in manifest references[] but missing from disk
-
-6. **Stale references:** References older than 90 days (based on `date` front matter field)
+4. **Stale references:** References older than 90 days (based on `date` front matter field)
    - Low priority — INFO level only
    - Report: OLD_REF: {filename} — {age} days old, may no longer be relevant
 
@@ -410,7 +368,7 @@ for unit in units_to_audit:
     )
 ```
 
-**For "Quick overview" scope:** Skip sub-agents. Just read each unit's `_brain/status.md` and `_brain/manifest.json` updated dates, count `_working/` files, count tasks. Present summary table only.
+**For "Quick overview" scope:** Skip sub-agents. Just read each unit's `_brain/status.md` updated date, count `_working/` files, count tasks. Present summary table only.
 
 ---
 
@@ -477,7 +435,7 @@ ACME/WEBAPP — 0 critical, 3 warnings, 2 info
 
 WARNINGS:
 [3] [!] _working/ has 12 files, 3 are > 14 days old
-[4] [!] Manifest lists docs/OLD-FILE.md but file doesn't exist on disk
+[4] [!] 3 files in _brain/ missing required front matter fields
 [5] [!] Task "Fix login" in-progress for 12 days
 
 INFO:
@@ -509,12 +467,9 @@ What to address?
 | Finding | Action Options |
 |---------|---------------|
 | **MISSING file** | Create from template |
-| **GHOST manifest entry** | Remove from manifest |
-| **UNTRACKED file** | Add to manifest (with generated description, date_created, date_modified, session_ids) / Move to correct location / Archive |
-| **Manifest reconciliation** (batch) | Add ALL untracked files to manifest at once — uses sub-agent generated descriptions and metadata |
-| **MISSING_METADATA** | Add missing `date_created`, `date_modified`, `session_ids` fields to manifest file entries |
-| **LEGACY_FIELD** | Convert manifest root `session_id` (singular) to `session_ids` (array) |
-| **MISSING_GOAL** | Prompt user for unit goal, add `goal` field to manifest root |
+| **NO_FRONTMATTER** | Add YAML front matter with required fields for that file's location |
+| **MISSING_FIELD** | Add missing fields to existing front matter |
+| **STALE_FRONTMATTER** | Update the `modified` or `updated` date, or flag for content review |
 | **STATUS_STRUCTURE** | Update status.md to use 7-section format (Goal, Phase, Updated, Key People, State of Play, Priorities, Blockers, Next Milestone) |
 | **LEGACY_STATUS_FORMAT** | Replace "Current Focus" section with "State of Play" |
 | **PEOPLE_IN_STATUS** | Move person details to `02_Life/people/`, replace with link in status.md Key People |
@@ -526,11 +481,9 @@ What to address?
 | **ORPHAN file** | Move to `_working/` / Move to area / Archive |
 | **Common pitfall** (plans/, inbox/, etc.) | Move to correct ALIVE location |
 | **NO_README** | Create README.md from template |
-| **ORPHAN_HANDOFF** | Archive to `01_Archive/{unit}/sessions/` |
+| **STALE_HANDOFF** | Archive to `01_Archive/{unit}/sessions/` |
 | **BAD_NAME** | Suggest rename following `[unit]_[context]_[name].ext` |
-| **BAD_FRONTMATTER / NO_FRONTMATTER** | Add or fix YAML front matter with required fields (`type`, `date`, `summary`) |
-| **ORPHAN_REF** | Add to manifest references[] / Archive |
-| **GHOST_REF** | Remove from manifest references[] |
+| **BAD_FRONTMATTER** | Fix YAML front matter with required fields for that file's location |
 | **OLD_REF** | Review relevance / Archive / Keep |
 | **Inputs backlog** | Run `/alive:digest` |
 
@@ -547,13 +500,13 @@ For each selected action:
 
 [1] ✓ Created _brain/insights.md from template
 [3] ✓ Archived 3 stale drafts to 01_Archive/
-[4] ✓ Removed ghost entry from manifest.json
+[4] ✓ Added front matter to 2 files missing it
 [6] ✓ Evolved 4 ecosystem files into ecosystem-map/ folder
 
 4 issues resolved.
 ```
 
-After execution, update the unit's `_brain/manifest.json` if any files were moved/created/removed.
+After execution, update YAML front matter on any files that were moved/created.
 
 ---
 
@@ -645,11 +598,11 @@ Then run root audit + sub-agents for units in that domain only.
 System is healthy:
 - Root structure compliant
 - All units have complete _brain/
-- Manifests accurate
+- Front matter healthy across all files
 - No stale content
 - Inputs clear
 - _working/ folders tidy
-- _references/ valid and tracked
+- _references/ valid with proper front matter
 ```
 
 **Massive cleanup needed (>20 issues):**

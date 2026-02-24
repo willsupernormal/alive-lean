@@ -10,6 +10,8 @@ Process the 03_Inputs/ buffer. Survey items, triage with user, extract content, 
 
 ## UI Treatment
 
+**UI:** Read `templates/ui-standards.md` for shell format and theme. Tier 3: Utility.
+
 Uses the **ALIVE Shell** — one rounded box, three zones.
 
 ```
@@ -27,8 +29,6 @@ Uses the **ALIVE Shell** — one rounded box, three zones.
 
 **Skill-specific icons:** `◆` task, `◇` decision, `●` person, `◎` insight, `↳` plan, `→` routes to destination.
 
-See `rules/ui-standards.md` for shell format, logo assets, and tier specifications.
-
 ---
 
 ## When to Use
@@ -44,7 +44,7 @@ Invoke when the user:
 1. **User stays in control** — Never auto-process without confirmation
 2. **Prioritize by importance** — Recent and urgent first
 3. **Smart extraction** — Use appropriate agents for complex content
-4. **Manifest-aware routing** — Route to existing areas when possible
+4. **Structure-aware routing** — Glob the target unit's directory structure to route to existing areas
 5. **Never delete, always archive** — Processed files move to `01_Archive/{relevant unit}/{mirrored path}/...`, never deleted
 
 ## Flow (4 Steps)
@@ -238,16 +238,16 @@ UI states), the purpose of the recording.
 
 **Step 3: Launch the agent.** Include the type-specific extraction focus above PLUS the target unit path and standard ALIVE extraction categories (decisions, tasks, insights, people, key quotes, references).
 
-**Step 4: Present results** in the ALIVE shell format (see `rules/ui-standards.md`). User confirms routing before any changes are made.
+**Step 4: Present results** in the ALIVE shell format (see `templates/ui-standards.md`). User confirms routing before any changes are made.
 
 ## Routing Logic
 
-### Check Manifest First
+### Check Unit Structure First
 
-Before routing, check if unit has an area for the content:
+Before routing, glob the target unit's directory to discover areas:
 
 ```
-▸ checking 04_Ventures/acme/_brain/manifest.json
+▸ scanning 04_Ventures/acme/*/
 
 Areas found:
   - clients/ → for client content

@@ -9,6 +9,8 @@ Create a comprehensive handoff document that enables a zero-context future sessi
 
 **Core principle:** The next Claude instance has NO memory. This document IS their memory.
 
+**UI:** Read templates/ui-standards.md for shell format and theme.
+
 ## UI Treatment
 
 Uses the **ALIVE Shell** — Tier 3: Utility.
@@ -22,8 +24,6 @@ Uses the **ALIVE Shell** — Tier 3: Utility.
 │  [✓ saved to _working/sessions/]                          │
 ╰──────────────────────────────────────────────────────────╯
 ```
-
-See `rules/ui-standards.md` for shell format, logo assets, and tier specifications.
 
 ---
 
@@ -46,7 +46,7 @@ digraph handoff_flow {
     "Check for existing handoff" -> "Dispatch subagent (NEW)" [label="not found"];
     "Dispatch subagent (UPDATE)" -> "Write handoff document";
     "Dispatch subagent (NEW)" -> "Write handoff document";
-    "Write handoff document" -> "Update manifest + return to save";
+    "Write handoff document" -> "Return to save";
 }
 ```
 
@@ -68,7 +68,7 @@ Ensure `{unit}/_working/sessions/` exists. Create with `mkdir -p` if missing.
 
 Check TWO locations (since handoffs are archived immediately on resume):
 
-1. `manifest.handoffs[]` — for pending handoffs not yet resumed
+1. `{unit}/_working/sessions/` — scan filenames for matching session ID
 2. `01_Archive/{unit-path}/sessions/` — for previously resumed handoffs
 
 **If handoff found (either location):**
@@ -77,7 +77,6 @@ Check TWO locations (since handoffs are archived immediately on resume):
 2. If found in archive, copy back to `_working/sessions/`
 3. Dispatch subagent with **UPDATE** instructions (Step 4)
 4. Update `updated` timestamp and increment `update_count` in frontmatter
-5. Ensure entry exists in `manifest.handoffs[]`
 
 This creates a **cumulative handoff** — each compaction appends to the same document rather than creating a new one.
 
@@ -175,8 +174,11 @@ Filename format: {description}-{session_id}-{date}.md
 Write to: {unit}/_working/sessions/{filename}.md
 
 ---
-created: {date}
 session_id: {session_id}
+date: {YYYY-MM-DD}
+thread: ongoing
+description: Brief summary of what was in progress
+created: {date}
 unit: {unit_path}
 status: pending
 reason: {continuing/coming_back_later}
@@ -184,8 +186,8 @@ update_count: 0
 ---
 
 > **ARCHIVE IMMEDIATELY AFTER READING.**
-> Move this file to `01_Archive/{unit-path}/sessions/` and remove from
-> `manifest.handoffs[]`. Do not proceed with any work until archived.
+> Move this file to `01_Archive/{unit-path}/sessions/` after resuming.
+> Do not proceed with any work until archived.
 
 > **BREADCRUMBS — Read these before proceeding:**
 > 1. `path/to/key-file.md` — What it is and why to read it
@@ -229,30 +231,7 @@ update_count: 0
 **Updated next steps:**
 1. New priorities reflecting current state
 
-MANIFEST UPDATE (BATCH — one Read, one Write):
-After writing the document, update {unit}/_brain/manifest.json in a SINGLE operation:
-
-1. Read the ENTIRE manifest.json with the Read tool
-2. Make ALL of the following changes in the JSON before writing:
-   - Set root "updated" to today's date (YYYY-MM-DD)
-   - Append {session_id} to root "session_ids" array (if not already present — append, never overwrite)
-   - Add or update handoff entry in the "handoffs" array (see below)
-3. Write the COMPLETE modified JSON back with one Write call
-
-Do NOT use multiple Edit calls. One Read → modify everything → one Write.
-
-Handoff entry for NEW handoffs:
-{
-  "path": "_working/sessions/{filename}.md",
-  "created": "YYYY-MM-DD",
-  "session_id": "{session_id}",
-  "status": "pending",
-  "description": "One-line summary of what was in progress"
-}
-
-For CUMULATIVE handoffs (updating existing), find the entry matching this session_id and update:
-- "description" — refresh to reflect current state
-- Do NOT change "created" or "session_id"
+The handoff file in `_working/sessions/` IS the record. Writing the file with correct YAML front matter is sufficient — no other index needed.
 ```
 
 ```
@@ -263,7 +242,7 @@ For CUMULATIVE handoffs (updating existing), find the entry matching this sessio
 
 ## Step 6: Return to Save
 
-The subagent handles the document write, manifest update, and session_ids — all instructions are in its prompt. Once it completes, **return control to the save skill immediately.**
+The subagent handles the document write — all instructions are in its prompt. Once it completes, **return control to the save skill immediately.**
 
 ```
 ✓ Handoff complete — returning to save flow

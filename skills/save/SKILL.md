@@ -1,6 +1,6 @@
 ---
 user-invocable: true
-description: End a work session and preserve all context — changelog, status, tasks, insights, and manifest. Use when the user says "save", "wrap up", "end session", "done for now", "brb", "stepping away", or "checkpoint".
+description: End a work session and preserve all context — changelog, status, tasks, and insights. Use when the user says "save", "wrap up", "end session", "done for now", "brb", "stepping away", or "checkpoint".
 plugin_version: "3.1.0"
 ---
 
@@ -17,6 +17,8 @@ This skill uses **Tier 2: Core Workflow** formatting.
 **Footer:** Community footer.
 
 See `rules/ui-standards.md` for the Tier 2/3 header layout, pre-rendered skill names, and border characters.
+
+**UI:** Read `templates/ui-standards.md` for shell format and theme.
 
 **Body conventions:**
 - `*` on generated changelog entry (right-aligned) — marks AI-generated content
@@ -50,7 +52,7 @@ Save touches ALL state files, not just changelog:
 3. Update what's done/next (tasks)
 4. Capture domain knowledge (insights) — not Claude operational patterns (auto-memory handles those)
 5. Handle working files (promote or keep)
-6. Update structure map (manifest) — every file touched this session must be recorded
+6. Enforce front matter on modified files
 7. Log to session-index
 8. VERIFY with checklist before confirming
 
@@ -58,7 +60,7 @@ Save touches ALL state files, not just changelog:
 
 ## BRB Mode (Quick Save)
 
-If user says "brb", "stepping away", or clearly wants a quick checkpoint — **skip the questions.** Auto-select: What's happening = Checkpoint, Quality = Routine. Jump straight to saving changelog + tasks + status + manifest + session-index.
+If user says "brb", "stepping away", or clearly wants a quick checkpoint — **skip the questions.** Auto-select: What's happening = Checkpoint, Quality = Routine. Jump straight to saving changelog + tasks + status + front matter + session-index.
 
 ```
 ▸ quick checkpoint
@@ -169,7 +171,6 @@ Changes to project (acme)?
 Save to acme/_brain/
     ↓
 Does parent (agency) need to know?
-    ├── New structure created? → Update parent manifest
     ├── Phase change? → Update parent status
     └── No impact on parent? → Done
 ```
@@ -180,8 +181,8 @@ Does parent (agency) need to know?
 
 | Quality | Actions |
 |---------|---------|
-| **Routine** | Changelog, tasks, status, manifest, session-index |
-| **Productive** | + Check `_working/` files, + Ensure all session-modified files are in manifest |
+| **Routine** | Changelog, tasks, status, front matter, session-index |
+| **Productive** | + Check `_working/` files |
 | **Important** | + Extract insights → `insights.md` |
 | **Breakthrough** | + Create capture in `_brain/memories/`, can update `CLAUDE.md` |
 
@@ -290,9 +291,8 @@ Check `_working/` for files that need decisions:
 
 1. **List all files** in `_working/` with last-modified dates
 2. **For each file**, ask: **[K]eep** (still WIP) / **[P]romote** (move to permanent location) / **[A]rchive** (move to `01_Archive/`)
-3. **For promotions**, ask: destination folder, new name (optional), manifest description
+3. **For promotions**, ask: destination folder, new name (optional)
 4. **Execute all moves** after collecting all decisions
-5. **Update manifest** — remove promoted files from `working_files`, add to appropriate area's `files[]`
 
 **NEVER DELETE. ALWAYS ARCHIVE.** Files move to `01_Archive/`, never removed.
 
@@ -300,64 +300,29 @@ Check `_working/` for files that need decisions:
 
 ---
 
-## Manifest Update (MANDATORY — Every Save)
+## Front Matter Enforcement (MANDATORY — Every Save)
 
-**Every file touched this session must be recorded in the manifest. No exceptions.**
+After completing _brain/ file writes, enforce YAML front matter on all `.md` files modified during this session:
 
-In `_brain/manifest.json`:
+1. **Glob all `.md` files** in the unit directory that were created or modified this session
+2. **For each file**, read the first few lines to check for YAML front matter (`---` delimiter)
+3. **If front matter is MISSING:**
+   - Add front matter with: `description` (AI-generated one-liner), `created` (today), `modified` (today), `session_ids` ([current session ID])
+4. **If front matter EXISTS:**
+   - Append current session_id to `session_ids` array (if not already present)
+   - Update `modified` to today
+   - For `_brain/` files: update `updated` to today
 
-```json
-{
-  "name": "ProjectName",
-  "description": "One sentence purpose",
-  "goal": "Single-sentence goal",
-  "updated": "2026-01-30",
-  "session_ids": ["prev123", "abc123"],
-  "folders": ["_brain", "_working", "_references", "docs"],
-  "areas": [
-    {
-      "path": "docs/",
-      "description": "Reference documentation",
-      "files": [
-        {
-          "path": "README.md",
-          "description": "Index of documentation",
-          "date_created": "2026-01-20",
-          "date_modified": "2026-01-30",
-          "session_ids": ["abc123"]
-        }
-      ]
-    }
-  ],
-  "working_files": [
-    {
-      "path": "_working/draft-v0.md",
-      "description": "Landing page draft",
-      "date_created": "2026-01-28",
-      "date_modified": "2026-01-30",
-      "session_ids": ["abc123"]
-    }
-  ],
-  "key_files": [
-    {
-      "path": "CLAUDE.md",
-      "description": "Identity",
-      "date_created": "2026-01-20",
-      "date_modified": "2026-01-30"
-    }
-  ],
-  "handoffs": []
-}
-```
+Use the Edit tool to add/update front matter. Don't modify file content below the front matter.
 
-**On every save:**
-1. Append current session ID to root `session_ids`
-2. Update `updated` date
-3. For each file created or modified this session:
-   - If already in manifest → update `date_modified` and append session ID
-   - If NOT in manifest → add with `description`, `date_created`, `date_modified`, `session_ids`
-   - If promoted from `_working/` → remove from `working_files`, add to appropriate area
-4. For `_references/` files added this session → update `references` array following the three-tier pattern (see `rules/conventions.md`)
+### Front matter specs by location
+
+| Location | Fields |
+|----------|--------|
+| `_brain/` files | `updated`, `session_ids` |
+| `_working/` files | `description`, `created`, `modified`, `session_ids` |
+| `_references/` summary files | `type`, `date`, `description`, `source`, `tags` |
+| Other `.md` files | `description`, `created`, `modified`, `session_ids` |
 
 ---
 
@@ -431,7 +396,7 @@ Use `echo '...' >> file` (double `>>`) to append, NOT overwrite. Each entry is o
 
 ### Step 1: Re-read current state
 
-Re-read `_brain/status.md`, `_brain/tasks.md`, and `_brain/manifest.json` to get current versions (another session may have updated them).
+Re-read `_brain/status.md` and `_brain/tasks.md` to get current versions (another session may have updated them).
 
 ### Step 2: Generate all changes
 
@@ -439,7 +404,7 @@ Prepare everything in one pass:
 - Changelog entry (draft the full entry)
 - Status edits (which sections need surgical updates)
 - Task updates (which tasks changed state, any new ones)
-- Manifest updates (session ID, file entries, working file changes)
+- Front matter updates (which files need front matter added/updated)
 - Session-index entry
 - Working file decisions (Productive+ only — list files, propose K/P/A)
 - Insights extraction (Important+ only)
@@ -454,7 +419,7 @@ Show the user a single summary of ALL proposed changes:
   changelog  · 4 changes, 2 decisions logged
   status     · State of Play updated (1 sentence edited)
   tasks      · 3 marked done, 1 new added
-  manifest   · session ID appended, 2 files updated
+  front matter · 4 files updated
   session-idx · entry appended
 
   Approve all? [y] yes  [e] edit something first
@@ -462,7 +427,7 @@ Show the user a single summary of ALL proposed changes:
 
 ### Step 4: Execute all writes
 
-On approval, write all files using parallel tool calls — changelog, tasks, status, manifest, and session-index have no dependencies on each other. Send them all in one response.
+On approval, write all files using parallel tool calls — changelog, tasks, status, front matter, and session-index have no dependencies on each other. Send them all in one response.
 
 **If user wants to edit:** Let them specify which item to change, adjust, then re-present.
 
@@ -475,7 +440,7 @@ On approval, write all files using parallel tool calls — changelog, tasks, sta
 - Changelog includes session ID and specific changes
 - Status edits are surgical (Edit tool, not Write)
 - Tasks reflect actual state changes
-- Every file touched this session is in the manifest
+- Front matter enforced on all modified `.md` files
 - Saving to CLOSEST unit
 - Working files checked (Productive+)
 
