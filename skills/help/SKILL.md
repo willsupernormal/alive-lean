@@ -23,7 +23,7 @@ Uses the **ALIVE Shell** — Tier 2: Core Workflow.
 ╰──────────────────────────────────────────────────────────╯
 ```
 
-See `rules/ui-standards.md` for shell format, logo assets, and tier specifications.
+**UI:** Read templates/ui-standards.md for shell format and theme.
 
 ---
 
@@ -145,9 +145,9 @@ status.md       Unit summary and state of play
 tasks.md        Work queue (urgent, to do, done)
 insights.md     Unit-scoped domain knowledge
 changelog.md    Session history + decisions
-manifest.json   Structure map with file summaries
 
 This is the unit's "brain" — its persistent memory.
+Files use YAML front matter (updated, session_ids) for metadata.
 ```
 
 ### Themes
@@ -179,7 +179,7 @@ This will:
 - Log what you did to changelog
 - Record any decisions
 - Note next steps
-- Update manifest
+- Update status and tasks
 
 Just say "save" or "wrap up" when ready.
 ```

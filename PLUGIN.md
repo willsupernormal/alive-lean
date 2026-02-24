@@ -28,13 +28,16 @@ Context infrastructure for Claude Code — stripped back to first principles. Sa
 |-------|---------|
 | `/alive:work` | Start a work session |
 | `/alive:save` | End session, log progress |
+| `/alive:daily` | Morning dashboard |
 | `/alive:new` | Create venture, experiment, life area, or project |
 | `/alive:capture` | Capture context into ALIVE |
 | `/alive:recall` | Search past context |
-| `/alive:daily` | Morning dashboard |
 | `/alive:archive` | Move completed items to archive |
 | `/alive:digest` | Process inputs |
 | `/alive:sweep` | Audit and clean stale content |
+| `/alive:migrate` | Bulk import content |
+| `/alive:handoff` | Hand off work to another session |
+| `/alive:revive` | Resume a past session |
 | `/alive:help` | Get guidance |
 | `/alive:onboarding` | First-time setup wizard |
 

@@ -25,7 +25,9 @@ Invoke when:
 
 This skill uses **Tier 1: Entry Point** formatting.
 
-**IMPORTANT:** Since rules aren't installed until Session 1, this skill must contain the full UI assets inline. Do not reference `rules/ui-standards.md` — use the assets below.
+**IMPORTANT:** Since rules aren't installed until Session 1, this skill must contain the full UI assets inline. For Session 2 (rules installed), also consult templates/ui-standards.md.
+
+**UI:** Read templates/ui-standards.md for shell format and theme (Session 2 onwards).
 
 ### Shell Format
 
@@ -178,8 +180,7 @@ Templates are located at:
 │   ├── status.md
 │   ├── tasks.md
 │   ├── insights.md
-│   ├── changelog.md
-│   └── manifest.json
+│   └── changelog.md
 ├── domains/            # Domain structure templates
 │   ├── ventures.md     # Venture types: Agency, Creator, E-commerce, Job, Custom
 │   ├── life.md         # Life areas: health, finance, relationships, growth, home
@@ -514,7 +515,13 @@ Write `changelog.md`:
 - [The immediate next step they described]
 ```
 
-Write `manifest.json` from template, customized with venture/experiment details.
+**YAML front matter:** All created `_brain/` files must include front matter with `updated` and `session_ids` fields. Example:
+```yaml
+---
+updated: 2026-02-24
+session_ids: [onboarding]
+---
+```
 
 Write `.claude/CLAUDE.md` (unit identity):
 ```markdown
@@ -736,7 +743,6 @@ _brain/ folder. That's where everything about it lives:
   tasks.md     → What needs doing
   insights.md  → Unit-scoped domain knowledge
   changelog.md → History of every session
-  manifest.json → Map of everything in the venture/experiment
 
 When you say "work on [name]", Claude reads those files and knows
 exactly where you left off. That's the whole trick — no database, no
@@ -1262,7 +1268,7 @@ Enter any goals, or skip:
 ```
 
 **Implementation:**
-Create `02_Life/_brain/` with status.md, tasks.md, insights.md, changelog.md, manifest.json from templates.
+Create `02_Life/_brain/` with status.md, tasks.md, insights.md, changelog.md from templates (all with YAML front matter).
 Create `02_Life/people/` folder and individual person files.
 Create each life area with _brain/, _working/, _references/, .claude/CLAUDE.md.
 
@@ -1447,9 +1453,10 @@ Create all ventures, experiments, and life areas configured in Steps 9-10. (The 
 - `_brain/tasks.md` (from template)
 - `_brain/insights.md` (from template)
 - `_brain/changelog.md` (from template)
-- `_brain/manifest.json` (from template, customized)
 - `_working/` (empty)
 - `_references/` (empty)
+
+**All `_brain/` files must include YAML front matter** with `updated` and `session_ids` fields.
 
 **Also create:**
 - `02_Life/_brain/` (Life-level status, tasks, insights, changelog)
@@ -1704,6 +1711,62 @@ No worries. If you change your mind later, the plugin is:
 
 You can install it any time.
 ```
+
+#### Session History Analysis (Optional)
+
+```
+╭─ SESSION HISTORY SCAN ──────────────────────────────────────╮
+│                                                              │
+│  One last optional step — scanning your Claude Code history. │
+│                                                              │
+╰──────────────────────────────────────────────────────────────╯
+
+Claude Code stores session data in ~/.claude/projects/.
+I can scan this for patterns — topics you frequently discuss,
+preferences, working habits — and seed your ALIVE system with
+that context.
+
+This is read-only. Nothing gets sent anywhere.
+```
+
+Use AskUserQuestion:
+```
+AskUserQuestion({
+  questions: [{
+    question: "Scan your Claude Code session history for patterns and preferences?",
+    header: "Session scan",
+    options: [
+      { label: "Yes — scan", description: "Extract preferences and patterns from past sessions" },
+      { label: "Skip", description: "I'll start fresh" }
+    ],
+    multiSelect: false
+  }]
+})
+```
+
+**If "Yes":**
+
+1. Scan `~/.claude/projects/` for directories and MEMORY.md files
+2. Read available MEMORY.md files to extract:
+   - Working preferences (coding style, communication style)
+   - Common topics and domains
+   - Tools and technologies used
+   - Any patterns worth preserving
+3. Present findings to user:
+   ```
+   ▸ scanning ~/.claude/projects/...
+     └─ Found [N] project histories
+
+   Patterns detected:
+   - [preference/pattern 1]
+   - [preference/pattern 2]
+   - [preference/pattern 3]
+
+   Want me to add these to your ALIVE preferences?
+   ```
+4. If user confirms, add relevant preferences to `{alive-root}/.claude/CLAUDE.md` under User Preferences
+
+**If "Skip":** Continue to completion.
 
 ---
 

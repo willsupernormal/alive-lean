@@ -18,11 +18,11 @@ Uses the **ALIVE Shell** — Tier 3: Utility.
 │  ──────────────────────────────────────────────────────── │
 │  [Confirmation of what was archived + destination]        │
 │  ──────────────────────────────────────────────────────── │
-│  [✓ files moved + manifest updated]                       │
+│  [✓ files moved]                                           │
 ╰──────────────────────────────────────────────────────────╯
 ```
 
-See `rules/ui-standards.md` for shell format, logo assets, and tier specifications.
+**UI:** Read templates/ui-standards.md for shell format and theme.
 
 ---
 
@@ -57,8 +57,7 @@ The archive mirrors the working structure exactly.
 2. Confirm it's ready (no pending tasks)
 3. Create archive path
 4. Move content
-5. Update manifests
-6. Confirm archive
+5. Confirm archive
 ```
 
 ## Step-by-Step
@@ -121,25 +120,12 @@ Moving: 5 files
 └── README.md
 ```
 
-### Step 5: Update Manifests
-
-**Parent manifest (04_Ventures/acme/_brain/manifest.json):**
-- Remove archived area from `areas[]`
-- Update `folders[]` if needed
-
-**Archive note:**
-Add to archived content:
-```markdown
-<!-- Archived: 2026-01-23 from 04_Ventures/acme/clients/globex/ -->
-```
-
-### Step 6: Confirm
+### Step 5: Confirm
 
 ```
 ✓ Archived to 01_Archive/04_Ventures/acme/clients/globex/
 
 5 files moved.
-Parent manifest updated.
 
 This content is preserved and searchable via /alive:recall.
 ```
@@ -172,8 +158,7 @@ Result:
 │   ├── status.md
 │   ├── tasks.md
 │   ├── insights.md
-│   ├── changelog.md
-│   └── manifest.json
+│   └── changelog.md
 ├── _working/
 ├── _references/
 └── [all areas and files]

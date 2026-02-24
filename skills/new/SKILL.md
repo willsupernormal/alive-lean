@@ -24,7 +24,7 @@ Uses the **ALIVE Shell** — one rounded box, three zones.
 ╰──────────────────────────────────────────────────────────╯
 ```
 
-See `rules/ui-standards.md` for shell format, logo assets, and tier specifications.
+**UI:** Read templates/ui-standards.md for shell format and theme.
 
 ---
 
@@ -115,8 +115,7 @@ What type of venture?
 │   ├── status.md          # Current phase
 │   ├── tasks.md           # Work queue
 │   ├── insights.md        # Domain knowledge
-│   ├── changelog.md       # History
-│   └── manifest.json      # Structure map
+│   └── changelog.md       # History
 ├── _working/              # Drafts
 └── _references/           # Reference material (summary .md files + raw/ subfolders)
     ├── emails/
@@ -161,7 +160,6 @@ Everything current lives in `_brain/`:
 - `tasks.md` — Work queue
 - `insights.md` — Domain knowledge
 - `changelog.md` — History
-- `manifest.json` — Structure map
 
 Drafts live in `_working/`.
 Reference material lives in `_references/` (summary .md files with raw originals in `raw/` subfolders).
@@ -169,6 +167,10 @@ Reference material lives in `_references/` (summary .md files with raw originals
 
 **status.md:**
 ```markdown
+---
+updated: [DATE]
+session_ids: [current_session_id]
+---
 # Status
 
 **Goal:** [Single-sentence goal for this venture]
@@ -190,6 +192,10 @@ Reference material lives in `_references/` (summary .md files with raw originals
 
 **tasks.md:**
 ```markdown
+---
+updated: [DATE]
+session_ids: [current_session_id]
+---
 # Tasks
 
 ## Urgent
@@ -204,22 +210,36 @@ Reference material lives in `_references/` (summary .md files with raw originals
 - [x] Created venture ([DATE])
 ```
 
-**manifest.json:**
-```json
-{
-  "name": "[Name]",
-  "description": "[One sentence]",
-  "goal": "[Single-sentence goal]",
-  "created": "[DATE]",
-  "updated": "[DATE]",
-  "session_ids": ["[current-session]"],
-  "folders": ["_brain", "_working", "_references"],
-  "areas": [],
-  "working_files": [],
-  "references": [],
-  "key_files": [],
-  "handoffs": []
-}
+**changelog.md:**
+```markdown
+---
+updated: [DATE]
+session_ids: [current_session_id]
+---
+# Changelog
+
+## [DATE] — Created
+
+Venture created.
+
+**Type:** [Agency | E-com | Creator | Job | Custom]
+**Description:** [One sentence]
+
+---
+```
+
+**insights.md:**
+```markdown
+---
+updated: [DATE]
+session_ids: [current_session_id]
+---
+# Insights
+
+Unit-scoped domain knowledge. Facts, principles, and learnings
+that should influence future work on this unit.
+
+---
 ```
 
 ### Step 5: Confirm Creation
@@ -244,7 +264,7 @@ Reference material lives in `_references/` (summary .md files with raw originals
 │  1) start working on it    2) add initial context        │
 │  3) add initial tasks                                    │
 │                                                          │
-│  ✓ _brain/ · _working/ · CLAUDE.md · manifest            │
+│  ✓ _brain/ · _working/ · _references/ · CLAUDE.md         │
 │                                                          │
 ╰──────────────────────────────────────────────────────────╯
 ```
@@ -300,19 +320,13 @@ Each client gets a subfolder with their project files.
 - Key contacts should exist in 02_Life/people/
 ```
 
-### Step 4: Update Parent Manifest
+### Step 4: Update Parent Changelog
 
-Add to `04_Ventures/acme-corp/_brain/manifest.json`:
-```json
-{
-  "areas": [
-    {
-      "path": "clients/",
-      "description": "Active client projects",
-      "has_projects": false
-    }
-  ]
-}
+Add to `04_Ventures/acme-corp/_brain/changelog.md`:
+```markdown
+## [DATE] — Created area: clients
+
+Added organizational folder for active client projects.
 ```
 
 ### Step 5: Confirm
@@ -320,7 +334,7 @@ Add to `04_Ventures/acme-corp/_brain/manifest.json`:
 ```
 ✓ Created 04_Ventures/acme-corp/clients/
 
-Added to manifest.json as area.
+Parent changelog updated.
 ```
 
 ## ICP Templates
@@ -433,8 +447,7 @@ One-line description?
 │   ├── status.md
 │   ├── tasks.md
 │   ├── insights.md
-│   ├── changelog.md
-│   └── manifest.json
+│   └── changelog.md
 ├── _working/         ← Project gets its OWN _working/
 ├── _references/      ← Project gets its OWN _references/
 └── README.md
@@ -454,6 +467,10 @@ One-line description?
 
 **status.md:**
 ```markdown
+---
+updated: [DATE]
+session_ids: [current_session_id]
+---
 # Status
 
 **Goal:** [Single-sentence goal for this project]
@@ -475,6 +492,10 @@ One-line description?
 
 **tasks.md:**
 ```markdown
+---
+updated: [DATE]
+session_ids: [current_session_id]
+---
 # Tasks
 
 ## Urgent
@@ -491,6 +512,10 @@ One-line description?
 
 **changelog.md:**
 ```markdown
+---
+updated: [DATE]
+session_ids: [current_session_id]
+---
 # Changelog
 
 ## [DATE] — Created
@@ -503,38 +528,21 @@ Project created within 04_Ventures/acme-agency/clients/.
 ---
 ```
 
-**manifest.json:**
-```json
-{
-  "name": "bigco",
-  "description": "Enterprise client, $10k/mo retainer",
-  "goal": "[Single-sentence goal]",
-  "created": "[DATE]",
-  "updated": "[DATE]",
-  "session_ids": ["[current-session]"],
-  "folders": ["_brain", "_working", "_references"],
-  "areas": [],
-  "working_files": [],
-  "references": [],
-  "key_files": [],
-  "handoffs": []
-}
+**insights.md:**
+```markdown
+---
+updated: [DATE]
+session_ids: [current_session_id]
+---
+# Insights
+
+Unit-scoped domain knowledge. Facts, principles, and learnings
+that should influence future work on this project.
+
+---
 ```
 
 ### Step 5: Update Parent
-
-Add to `04_Ventures/acme-agency/_brain/manifest.json`:
-```json
-{
-  "areas": [
-    {
-      "path": "clients/",
-      "has_projects": true,
-      "projects": ["bigco"]
-    }
-  ]
-}
-```
 
 Add to `04_Ventures/acme-agency/_brain/changelog.md`:
 ```markdown
@@ -553,14 +561,12 @@ Structure:
 │   ├── status.md
 │   ├── tasks.md
 │   ├── insights.md
-│   ├── changelog.md
-│   └── manifest.json
+│   └── changelog.md
 ├── _working/
 ├── _references/
 └── README.md
 
 Parent changelog updated.
-Parent manifest updated.
 
 Next: /alive:work bigco to start working.
 ```

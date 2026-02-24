@@ -24,7 +24,7 @@ Uses the **ALIVE Shell** — Tier 3: Utility.
 ╰──────────────────────────────────────────────────────────╯
 ```
 
-See `rules/ui-standards.md` for shell format, logo assets, and tier specifications.
+**UI:** Read templates/ui-standards.md for shell format and theme.
 
 ---
 
@@ -58,8 +58,7 @@ Invoke when the user:
 3. Analyze content
 4. Extract structured data
 5. Route to appropriate locations
-6. Update manifest
-7. Confirm migration
+6. Confirm migration
 ```
 
 ## Step-by-Step
@@ -179,31 +178,14 @@ Source (reference):
   → 04_Ventures/acme/_references/call-john-smith-2026-01-20.md
 ```
 
-**Reference routing:** When the source material is a reference type (email, call transcript, screenshot, article), route it to `_references/` with YAML front matter rather than a generic folder. See the capture-context skill for front matter format.
+**Reference routing:** When the source material is a reference type (email, call transcript, screenshot, article), route it to `_references/` with YAML front matter. See the capture skill for front matter format.
 
-### Step 6: Update Manifest
+**YAML front matter for imported files:** All created files must include appropriate YAML front matter:
+- `_brain/` files: `updated`, `session_ids`
+- `_working/` files: `description`, `created`, `modified`, `session_ids`
+- `_references/` summary files: `type`, `date`, `description`, `source`, `tags`
 
-Add imported files to the manifest. Reference materials go in the `references` array:
-
-```json
-{
-  "references": [
-    {
-      "path": "_references/call-john-smith-2026-01-20.md",
-      "type": "call",
-      "description": "Call with John Smith about AWS migration, launch timeline",
-      "date_created": "2026-01-20",
-      "date_modified": "2026-01-20",
-      "people": ["john-smith"],
-      "session_ids": ["abc123"]
-    }
-  ]
-}
-```
-
-Non-reference files go in the standard `files` or `areas` arrays as usual.
-
-### Step 7: Confirm
+### Step 6: Confirm
 
 ```
 ✓ Migration complete
@@ -213,9 +195,7 @@ Imported:
 - 2 decisions logged
 - 5 tasks added
 - 2 insights captured
-- Source filed to meetings/
-
-Manifest updated.
+- Source filed to _references/
 ```
 
 ## Migration Types
@@ -229,7 +209,6 @@ For call/meeting transcripts:
 4. Extract insights (domain knowledge: strategy, product, process, market)
 5. Update person files with "last contact"
 6. Store source as reference in `_references/` with YAML front matter
-7. Add to `manifest.json` `references` array
 
 ### Document Migration
 
@@ -237,7 +216,7 @@ For documents/PDFs:
 1. Summarize content
 2. Identify key information
 3. Route to appropriate area
-4. Add to manifest with summary
+4. Add YAML front matter with summary
 
 ### Folder Migration
 
@@ -246,7 +225,7 @@ For folders of files:
 2. Categorize by type
 3. Process each file
 4. Create area structure if needed
-5. Bulk update manifest
+5. Add YAML front matter to all files
 
 ### Notes Migration
 

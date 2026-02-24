@@ -25,7 +25,53 @@ Uses the **ALIVE Shell** — one rounded box, three zones (header / content / fo
 ╰──────────────────────────────────────────────────────────╯
 ```
 
-See `rules/ui-standards.md` for shell format, logo assets, and tier specifications.
+**UI:** Read templates/ui-standards.md for shell format and theme.
+
+### Tier 1 Header (First-Ever Daily Only)
+
+On the user's very first `/alive:daily` run, render the large elephant + ALIVE wordmark ABOVE the shell (not inside borders):
+
+```
+                     .. ..oooo.....ooo...
+               .odSS4PYYYSSOOXXXXXXXXXOodbgooo.
+              /SSYod$$SSOIIPXXXXXXXXXYYP.oo.*b.
+             ($Yd$$SSSOII:XXXXXXXX:IIoSSS$$b.Y,
+              \Yd$$SSSOII:XXXXXXXXXX:IIOOSSS$$b\
+               d$$SSSOOI:XP"YXXXXXXXX:IIOOSSSS$$\
+               Y$$SSSOOII:XbdXXXXXP"YX:IIOOOSS$$)
+               'Y$$SSSOI:XXXXXXXXXbodX:IIOOSS$$$/
+                "Y$$SSSOI(PoTXXXXXTo)XXIIOOOSS$$*'
+                  ""*Y$S(((PXXXXXXXY))dIIOSSS$dP'
+                     "*'()P;XXXXXXXXY)IIOSSS$P".oS,
+                     (S'(P;XXXXXXXP;Y)XXYOP".oSSSSb
+                    (S'(P;'XXXXXXX';Y).ooooSSSSSSSS)
+                    (S'(P;'XXXXXXP';Y).oSSSSSSSSSSSP
+                    (SS'Y);YXXXXX';(Y.oSSSSSSSSSSSSP
+                     YSS'Y)'YXXX".(Y.oSSP.SSSSSSSSY
+                      YSS'"" XXX""oooSSP.SSSSSSSSY
+                      SSSSSS YXXX:SSSSP.SSSSSSSSY
+                      SSSSSP  YXb:SSSP.S"SSSSSSP
+                      S(OO)S   YXb:SY    )SSSSS
+                      SSSSO    )YXb.I    ISSSSP
+                      YSSSY    I."YXXb   Y(SS)I
+                      )SSS(    dSSo.""*b  YSSSY
+                      OooSb   dSSSSP      )SSS(
+                              dSSSY       OooSS
+                              OooSP
+
+      .o.       ooooo        ooooo oooooo     oooo oooooooooooo
+     .888.      `888'        `888'  `888.     .8'  `888'     `8
+    .8"888.      888          888    `888.   .8'    888
+   .8' `888.     888          888     `888. .8'     888oooo8
+  .88ooo8888.    888          888      `888.8'      888    "
+ .8'     `888.   888       o  888       `888'       888       o
+o88o     o8888o o888ooooood8 o888o       `8'       o888ooooood8
+──────────────────────────────────────────────────────────────────
+                    O p e r a t o r   S y s t e m
+──────────────────────────────────────────────────────────────────
+```
+
+Detect first-ever by checking if `.claude/state/session-index.jsonl` is empty or missing. Subsequent dailies use the standard Tier 2 compact header from ui-standards.
 
 ---
 
@@ -81,9 +127,9 @@ If yes → invoke `/alive:upgrade` then restart daily.
 |--------|---------|
 | `alive.local.yaml` | Sync script configuration (optional) |
 | `.claude/state/session-index.jsonl` | Ongoing threads with quality tags |
-| `{unit}/_brain/status.md` | Goal line, phase, focus |
+| `{unit}/_brain/status.md` | Goal line, phase, focus, `updated` date from YAML front matter |
 | `{unit}/_brain/tasks.md` | @urgent tagged items |
-| `{unit}/_brain/manifest.json` | working_files array |
+| `{unit}/_working/**/*` (Glob) | Working file count per unit |
 | `03_Inputs/` | Count of pending items |
 
 ## Flow
@@ -231,12 +277,11 @@ Urgent tasks trigger the **!** attention indicator on their row in the grid. The
 
 ## Section: Working Files
 
-Use the Glob tool to find all _brain/manifest.json files. Then use the Read tool to extract the working_files array from each.
+Use the Glob tool to scan `{unit}/_working/**/*` for each unit to count working files.
 
-- Show path + age
-- Max 5
-
-Working files count appears in the fine print stats. Individual working files are surfaced in /alive:work when focused on a single unit.
+- Count files per unit (exclude `.DS_Store`)
+- Show total count in fine print stats
+- Individual working files are surfaced in /alive:work when focused on a single unit
 
 ## Section: Inputs
 
@@ -249,7 +294,8 @@ Input count appears in the action bar as the **d)** digest option. If zero input
 
 ## Section: Stale Units
 
-Check each unit's _brain/manifest.json for the "updated" date:
+Check each unit's `_brain/status.md` YAML front matter for the `updated` date:
+- Read the `updated` field from the YAML front matter at the top of each status.md
 - Flag if > 7 days (configurable)
 - Show as numbered option
 
