@@ -49,12 +49,11 @@ If you're not running `/alive:daily` regularly, you're not using the system.
 **What it loads (mandatory):**
 - `_brain/status.md` — Unit summary and state of play
 - `_brain/tasks.md` — What needs doing
-- `_brain/manifest.json` — What exists
 - `_brain/changelog.md` (first 200 lines) — Recent session history, decisions, context
 
 **What it loads on demand:**
 - `insights.md` — Domain knowledge, when making decisions that past learnings could inform, or when the user asks "what did we learn about X"
-- `_references/` raw files — When deeper context on a specific reference is needed (manifest index is always loaded for awareness)
+- `_references/` summaries — When deeper context on a specific reference is needed (Glob `_references/**/*.md` on demand)
 - Other units — Ask before cross-loading
 
 ---
@@ -72,7 +71,7 @@ If you're not running `/alive:daily` regularly, you're not using the system.
 
 | Quality | Actions |
 |---------|---------|
-| Routine | Changelog, tasks, status, manifest |
+| Routine | Changelog, tasks, status, front matter |
 | Productive | + Check `_working/` files, promote if ready |
 | Important | + Extract domain knowledge to `insights.md` (not Claude operational patterns — those go to auto-memory) |
 | Breakthrough | + Create memory in `_brain/memories/`, can update CLAUDE.md |

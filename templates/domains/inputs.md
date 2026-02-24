@@ -73,7 +73,7 @@ This will:
 |------|------------|-------------|
 | Quick note | Extract action items | tasks.md, _working/ |
 | Transcript | Full extraction (agent) | changelog.md, tasks.md, people/ |
-| Document | Summarize, file | Folder, manifest |
+| Document | Summarize, file | Folder, changelog |
 | Email | Extract tasks, file | tasks.md, folder |
 | Idea | Capture as domain knowledge | insights.md, _working/ |
 

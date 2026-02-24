@@ -18,8 +18,7 @@
     │   ├── status.md
     │   ├── tasks.md
     │   ├── insights.md
-    │   ├── changelog.md
-    │   └── manifest.json
+    │   └── changelog.md
     ├── _working/
     └── _references/
 ```

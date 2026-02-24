@@ -24,9 +24,9 @@ rm -rf 04_Ventures/old-venture/
 mv 04_Ventures/old-venture/ 01_Archive/04_Ventures/old-venture/
 ```
 
-## 4. Manifest After Create
+## 4. Front Matter After Create
 
-Every new file gets a manifest entry immediately. No "I'll update the manifest later." If you created the file, update `_brain/manifest.json` in the same operation.
+Every new `.md` file gets YAML front matter immediately. No "I'll add front matter later." If you created the file, add front matter in the same operation.
 
 ## 5. Handoffs Go to _working/sessions/
 

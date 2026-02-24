@@ -10,7 +10,7 @@ Before answering anything about a unit, person, or past decision:
 
 1. Ask yourself: "Do I have this context loaded, or am I guessing?"
 2. If guessing: **STOP**. Read the relevant `_brain/` files first.
-3. Check the manifest's `references` array for available reference materials. Load via three-tier pattern: manifest (index) → front matter (rich metadata) → raw content (full text).
+3. Glob `_references/**/*.md` (exclude `raw/`) for available reference materials. Load via two-tier pattern: summary .md (rich metadata) → raw/ content (full source).
 4. Never confabulate. Query the system.
 
 **Example:**

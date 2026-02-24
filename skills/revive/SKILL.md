@@ -145,7 +145,7 @@ KEY QUOTES (verbatim)
 
 > "VERIFY BEFORE CONFIRMING. Save is the chance to complete the loop."
 
-> "Every file needs a manifest entry with description. No exceptions."
+> "Every file needs YAML front matter with description. No exceptions."
 
 > "SessionEnd hooks are unreliable — design around explicit saves"
 
@@ -165,7 +165,7 @@ INSIGHTS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 • Quality-based escalation prevents save fatigue
 • AskUserQuestion makes 3 questions feel fast
-• Manifest is a semantic sitemap, not just a file list
+• Front matter makes every file self-describing
 • Closest unit rule prevents saving to wrong level
 
 WHERE YOU LEFT OFF

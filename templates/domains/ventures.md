@@ -16,8 +16,7 @@
     │   ├── status.md
     │   ├── tasks.md
     │   ├── insights.md
-    │   ├── changelog.md
-    │   └── manifest.json
+    │   └── changelog.md
     ├── _working/     # Drafts
     ├── _references/  # Reference materials
     └── [areas]/      # Organizational folders
@@ -127,7 +126,6 @@ Everything current lives in `_brain/`:
 - `tasks.md` — Work queue
 - `insights.md` — Domain knowledge
 - `changelog.md` — History
-- `manifest.json` — Structure map
 
 Drafts live in `_working/`.
 ```
@@ -176,26 +174,6 @@ Drafts live in `_working/`.
 
 ## Done (Recent)
 - [x] Created venture ([DATE])
-```
-
----
-
-## manifest.json Template
-
-```json
-{
-  "name": "[Venture Name]",
-  "description": "[One sentence description]",
-  "created": "[DATE]",
-  "updated": "[DATE]",
-  "session_ids": ["[current-session]"],
-  "goal": "",
-  "folders": ["_brain", "_working", "_references"],
-  "areas": [],
-  "working_files": [],
-  "key_files": [],
-  "handoffs": []
-}
 ```
 
 ---

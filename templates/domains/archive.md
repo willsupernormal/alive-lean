@@ -68,7 +68,7 @@ This will:
 1. Verify the content is ready (no pending tasks)
 2. Create the archive path
 3. Move content
-4. Update manifests
+4. Update changelogs
 5. Confirm archive
 
 ---
@@ -95,7 +95,7 @@ User: "Restore 04_Ventures/acme/clients/globex"
 ALIVE: Found in archive. Restore to original location?
 ```
 
-Restoration moves content back to active location and updates manifests.
+Restoration moves content back to active location and updates changelogs.
 
 ---
 

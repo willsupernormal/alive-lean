@@ -63,8 +63,7 @@ Every venture, experiment, and life area has `_brain/`, `_working/`, and `_refer
 │   ├── status.md      # Unit summary — state of play, key people, priorities
 │   ├── tasks.md       # What needs doing
 │   ├── changelog.md   # What happened + decisions
-│   ├── insights.md    # Unit-scoped domain knowledge
-│   └── manifest.json  # Structure map
+│   └── insights.md    # Unit-scoped domain knowledge
 ├── _working/           # Drafts in progress
 └── _references/        # Reference materials and source documents
 ```

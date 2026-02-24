@@ -62,7 +62,7 @@ _working/
 1. **Create the folder** at the appropriate level (usually sibling to `_working/`)
 2. **Add README.md** using the template below
 3. **Move files** and simplify names (drop the prefix)
-4. **Update manifest.json** if it exists
+4. **Update parent changelog** if applicable
 
 ---
 
