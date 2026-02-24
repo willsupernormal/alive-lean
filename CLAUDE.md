@@ -16,7 +16,6 @@ When working on a venture, experiment, life area, or project, read these files f
 |------|---------|-----|
 | `_brain/status.md` | Unit summary — state of play, key people, priorities | Know where we are |
 | `_brain/tasks.md` | Active work, urgent items | Know what needs doing |
-| `_brain/manifest.json` | Structure, folders, last session | Know what exists |
 | `_brain/changelog.md` | Recent actions, decisions, progress | What has occurred |
 
 Show retrieval: `▸ reading 04_Ventures/x/_brain/status.md`
@@ -101,9 +100,11 @@ This goal filters decisions ("Does this serve the goal?"), enables advice (Claud
 
 Every **venture**, **experiment**, **life area**, and **project** has:
 - `.claude/CLAUDE.md` — Identity (what it is, who's involved)
-- `_brain/` — Current state (status summary, tasks, domain knowledge, changelog, manifest)
+- `_brain/` — Current state (status summary, tasks, domain knowledge, changelog)
 - `_working/` — Drafts in progress
-- `_references/` — Reference materials and source documents (YAML front matter indexed in manifest `references` array for scanning without loading)
+- `_references/` — Reference materials and source documents
+
+Metadata is distributed via YAML front matter on each `.md` file.
 
 Every **area** (organizational folder) has:
 - `README.md` — What this folder contains
@@ -132,7 +133,7 @@ If the answer is no, you haven't finished.
 Read `rules/` for detailed guidance on:
 - **voice.md** — How to talk (direct, no fluff, no false enthusiasm)
 - **behaviors.md** — Context behaviors in detail
-- **conventions.md** — File naming, _brain files, manifest structure
+- **conventions.md** — File naming, _brain files, YAML front matter
 - **ui-standards.md** — Themes, symbols, output formatting
 - **intent.md** — How to recognize what skill the user wants
 - **learning-loop.md** — Core workflow: daily → work → save → repeat

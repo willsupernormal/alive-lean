@@ -19,21 +19,6 @@ DAILY → WORK → SAVE → REPEAT
 
 ---
 
-## Why This Matters
-
-**AI forgets. ALIVE remembers.**
-
-But only if you run the loop. Each cycle:
-- Captures what happened (save)
-- Surfaces what's stale (daily)
-- Focuses attention (do)
-- Compounds context (repeat)
-
-Skip the loop → context leaks.
-Run the loop → context compounds.
-
----
-
 ## Daily: The Heartbeat
 
 If you're not running `/alive:daily` regularly, you're not using the system.
@@ -105,66 +90,3 @@ Every session has a thread state:
 | **Closed** | This thread is done | Archive if unit complete |
 
 **Ongoing threads** surface in `/alive:daily` so you don't lose track.
-
----
-
-## The Compound Effect
-
-Context compounds like interest:
-
-```
-Day 1: Start venture, save context
-Day 2: Resume with full context, make progress, save
-Day 3: Resume with 2 days of context, make more progress, save
-...
-Day 30: You have a month of compounded context
-```
-
-**Without the loop:**
-```
-Day 1: Start venture
-Day 2: Where was I? Reconstruct context...
-Day 3: Start over again...
-```
-
----
-
-## Breaking the Loop
-
-Common failure modes:
-
-| Failure | Impact | Fix |
-|---------|--------|-----|
-| Skip daily | Miss urgent tasks, stale context | Run daily every session |
-| Skip save | Lose progress, decisions | Always save before leaving |
-| Work on multiple units | Context overflow, shallow work | Use `/alive:work` for single focus |
-| Never close threads | Endless "ongoing" list | Review threads weekly |
-
----
-
-## Integration with Other Skills
-
-The loop works with the full skill set:
-
-| Skill | Role in Loop |
-|-------|--------------|
-| `/alive:capture` | Capture context → triggers during WORK |
-| `/alive:digest` | Process 03_Inputs/ → part of DAILY |
-| `/alive:revive` | Resume old session → alternative to DO |
-| `/alive:sweep` | Clean stale context → periodic maintenance |
-
----
-
-## Summary
-
-```
-DAILY → See everything, pick focus
-WORK  → Load one unit, go deep
-SAVE  → Preserve what happened
-REPEAT → Context compounds
-
-Skip the loop = context leaks
-Run the loop = context compounds
-```
-
-The loop is the system. Everything else supports it.

@@ -68,38 +68,7 @@ _working/
 
 ## README Template
 
-Every evolved folder gets a README that explains what it is:
-
-```markdown
-# [Project Name]
-
-**Purpose:** [One sentence: what is this project?]
-**Status:** [Draft | Active | Complete | On Hold]
-**Created:** [DATE]
-
----
-
-## Contents
-
-| File | Description |
-|------|-------------|
-| `v1.md` | Initial draft |
-| `v2.md` | Revised after feedback |
-| `notes.md` | Research and reference notes |
-| `copy.md` | Marketing copy drafts |
-
----
-
-## Context
-
-[2-3 sentences of context. Why does this exist? What problem does it solve? Any constraints or decisions?]
-
----
-
-## Next Steps
-
-- [ ] Outstanding tasks for this project
-```
+Use template at `templates/working-folder-readme.md`.
 
 ---
 
@@ -128,52 +97,6 @@ Every evolved folder gets a README that explains what it is:
 
 ---
 
-### Example 2: Client Proposal
-
-**Before:**
-```
-04_Ventures/acme/_working/
-├── acme_globex_proposal-draft.md
-├── acme_globex_proposal-v1.pdf
-├── acme_globex_scope.md
-├── acme_globex_pricing.md
-```
-
-**After:**
-```
-04_Ventures/acme/clients/globex/proposal/
-├── README.md
-├── draft.md
-├── v1.pdf
-├── scope.md
-├── pricing.md
-```
-
----
-
-### Example 3: Content Series
-
-**Before:**
-```
-04_Ventures/acme/_working/
-├── acme_linkedin_ai-series-1.md
-├── acme_linkedin_ai-series-2.md
-├── acme_linkedin_ai-series-3.md
-├── acme_linkedin_ai-series-outline.md
-```
-
-**After:**
-```
-04_Ventures/acme/content/linkedin/ai-series/
-├── README.md
-├── outline.md
-├── post-1.md
-├── post-2.md
-├── post-3.md
-```
-
----
-
 ## When NOT to Evolve
 
 Keep files in `_working/` when:
@@ -189,34 +112,15 @@ Keep files in `_working/` when:
 
 ---
 
-## Naming the Evolved Folder
+## Naming
 
-Choose a name that:
-- Describes the project, not the file type
-- Is lowercase with hyphens
-- Could become a conversation reference
-
-| Good | Bad |
-|------|-----|
-| `landing-page/` | `landing-page-files/` |
-| `proposal/` | `globex-proposal-docs/` |
-| `ai-series/` | `linkedin-posts/` |
+Lowercase with hyphens. Describe the project, not the file type.
 
 ---
 
 ## Proactive Suggestions
 
-Claude should notice when evolution is appropriate:
-
-```
-I notice you have 4 related files in _working/ for the landing page project:
-- acme_landing-v0.html
-- acme_landing-v1.html
-- acme_landing-notes.md
-- acme_landing-copy.md
-
-Want me to evolve these into a proper landing-page/ folder with a README?
-```
+Claude should notice when evolution is appropriate and offer to create a proper folder.
 
 ---
 

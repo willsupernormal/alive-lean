@@ -132,15 +132,3 @@ Working on 04_Ventures/acme/
 "This references 04_Ventures/other/. Want me to load that context too?"
 ```
 
----
-
-## Summary
-
-| Behavior | One-liner |
-|----------|-----------|
-| Query Before Answering | Read files, don't guess |
-| Show Retrieval Paths | Make the system visible |
-| Flag Stale Context | Old data gets called out |
-| Suggest Captures | Offer to log shared context |
-| Surface Proactively | Don't wait to be asked |
-| Scoped Reading | Stay focused, ask before expanding |
