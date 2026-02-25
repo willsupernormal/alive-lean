@@ -117,15 +117,16 @@ What type of venture?
 │   ├── insights.md        # Domain knowledge
 │   └── changelog.md       # History
 ├── _working/              # Drafts
-└── _references/           # Reference material (summary .md files + raw/ subfolders)
-    ├── emails/
-    │   ├── 2026-02-06-client-update.md   # YAML front matter + AI summary + source pointer
-    │   └── raw/
-    │       └── 2026-02-06-client-update.txt
-    └── screenshots/
-        ├── 2026-02-06-competitor.md
-        └── raw/
-            └── 2026-02-06-competitor.png
+├── _references/           # Reference material (summary .md files + raw/ subfolders)
+│   ├── emails/
+│   │   ├── 2026-02-06-client-update.md   # YAML front matter + AI summary + source pointer
+│   │   └── raw/
+│   │       └── 2026-02-06-client-update.txt
+│   └── screenshots/
+│       ├── 2026-02-06-competitor.md
+│       └── raw/
+│           └── 2026-02-06-competitor.png
+└── README.md              # Structural overview
 ```
 
 ### Step 4: Initialize Files
@@ -242,6 +243,16 @@ that should influence future work on this unit.
 ---
 ```
 
+**README.md:**
+```markdown
+# [Unit Name]
+
+## Structure
+- `_brain/` — Unit state (status, tasks, changelog, insights)
+- `_working/` — Drafts in progress
+- `_references/` — Captured external content
+```
+
 ### Step 5: Confirm Creation
 
 ```
@@ -264,7 +275,7 @@ that should influence future work on this unit.
 │  1) start working on it    2) add initial context        │
 │  3) add initial tasks                                    │
 │                                                          │
-│  ✓ _brain/ · _working/ · _references/ · CLAUDE.md         │
+│  ✓ _brain/ · _working/ · _references/ · CLAUDE.md · README.md │
 │                                                          │
 ╰──────────────────────────────────────────────────────────╯
 ```
@@ -540,6 +551,16 @@ Unit-scoped domain knowledge. Facts, principles, and learnings
 that should influence future work on this project.
 
 ---
+```
+
+**README.md:**
+```markdown
+# [Unit Name]
+
+## Structure
+- `_brain/` — Unit state (status, tasks, changelog, insights)
+- `_working/` — Drafts in progress
+- `_references/` — Captured external content
 ```
 
 ### Step 5: Update Parent

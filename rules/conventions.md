@@ -101,20 +101,51 @@ Every venture, experiment, life area, and project has `_brain/` with these files
 
 Full templates: `templates/brain/`
 
+### insights.md Gate
+
+An insight belongs in insights.md **only if** all three conditions are met:
+
+1. **Domain knowledge that influences future decisions** — not a one-off fact, status update, or production spec
+2. **Not already captured in CLAUDE.md** or another always-loaded file — if it's identity, rules, or terminology, it belongs there
+3. **Not a one-off fact or status update** — "Express shipping = 3 days" is a fact for a tech pack or status.md, not an insight
+
+**Format rules:**
+- **Evidence** = session ID only (e.g. `abc12345`). Full context is recoverable from `_references/` transcripts or `_brain/changelog.md`.
+- **No Action: field** — actions belong in tasks.md
+- **Learning** = one paragraph max. No filler.
+
+---
+
+## Unit-Level README
+
+Every unit (venture, experiment, life area, project) has a `README.md` at its root providing a structural overview — a curated map of what exists.
+
+### Format
+
+```markdown
+# [Unit Name]
+
+## Structure
+- `folder-name/` — What this folder contains (N items)
+- `_working/` — Drafts in progress (N files)
+- `_references/` — Captured external content (N files)
+
+## Key Files
+- `path/to/important.md` — One-line description
+```
+
+### Rules
+- Curated guide, NOT exhaustive inventory — only notable folders and files
+- Updated by the save skill on structural changes (new folders, promoted files)
+- Do not list _brain/ internals (those are state files accessed separately)
+
 ---
 
 ## YAML Front Matter
 
-Every `.md` file in ALIVE carries metadata via YAML front matter. The save skill enforces this on all modified files.
+`_working/` and `_references/` files carry metadata via YAML front matter. The save skill enforces this on modified files.
 
-### _brain/ files
-
-```yaml
----
-updated: 2026-02-24
-session_ids: [abc12345]
----
-```
+**`_brain/` files do NOT get front matter.** They are internal state files with dates already embedded in content (`**Updated:**` lines, `## YYYY-MM-DD` entries). Adding front matter would be redundant.
 
 ### _working/ files
 

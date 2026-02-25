@@ -182,7 +182,7 @@ Does parent (agency) need to know?
 | Quality | Actions |
 |---------|---------|
 | **Routine** | Changelog, tasks, status, front matter, session-index |
-| **Productive** | + Check `_working/` files |
+| **Productive** | + Check `_working/` files + README maintenance (if structural changes) |
 | **Important** | + Extract insights → `insights.md` |
 | **Breakthrough** | + Create capture in `_brain/memories/`, can update `CLAUDE.md` |
 
@@ -268,15 +268,19 @@ In `_brain/tasks.md`:
 
 ## Insights Entry (Important+ Only)
 
-For Important or Breakthrough saves, consider domain knowledge worth preserving in `_brain/insights.md`:
+For Important or Breakthrough saves, consider domain knowledge worth preserving in `_brain/insights.md`.
+
+**Gate — all three must be true:**
+1. Domain knowledge that influences future decisions (not a one-off fact or status update)
+2. Not already in CLAUDE.md or another always-loaded file
+3. Not a production spec, status update, or content execution detail
 
 ```markdown
 ## 2026-01-30 — [Insight Title]
 
 **Category:** [strategy | product | process | market]
-**Learning:** The insight itself
-**Evidence:** How we know this
-**Applies to:** Where this matters going forward
+**Learning:** One paragraph max. What was learned and why it matters.
+**Evidence:** [session-id]
 
 ---
 ```
@@ -302,16 +306,15 @@ Check `_working/` for files that need decisions:
 
 ## Front Matter Enforcement (MANDATORY — Every Save)
 
-After completing _brain/ file writes, enforce YAML front matter on all `.md` files modified during this session:
+After completing _brain/ file writes, enforce YAML front matter on `_working/` and `_references/` files modified during this session. **`_brain/` files do NOT get front matter** — they have dates embedded in content already.
 
-1. **Glob all `.md` files** in the unit directory that were created or modified this session
+1. **Glob `_working/` and `_references/` `.md` files** in the unit directory that were created or modified this session
 2. **For each file**, read the first few lines to check for YAML front matter (`---` delimiter)
 3. **If front matter is MISSING:**
    - Add front matter with: `description` (AI-generated one-liner), `created` (today), `modified` (today), `session_ids` ([current session ID])
 4. **If front matter EXISTS:**
    - Append current session_id to `session_ids` array (if not already present)
    - Update `modified` to today
-   - For `_brain/` files: update `updated` to today
 
 Use the Edit tool to add/update front matter. Don't modify file content below the front matter.
 
@@ -319,10 +322,23 @@ Use the Edit tool to add/update front matter. Don't modify file content below th
 
 | Location | Fields |
 |----------|--------|
-| `_brain/` files | `updated`, `session_ids` |
 | `_working/` files | `description`, `created`, `modified`, `session_ids` |
 | `_references/` summary files | `type`, `date`, `description`, `source`, `tags` |
-| Other `.md` files | `description`, `created`, `modified`, `session_ids` |
+| Other `.md` files (not `_brain/`) | `description`, `created`, `modified`, `session_ids` |
+
+### README Maintenance (Productive+ Only)
+
+On Productive or higher saves, check if the unit's README.md needs updating:
+
+1. Read the unit's `README.md`
+2. Compare against the actual directory structure (Glob the unit root)
+3. If structural changes occurred this session (new folders created, files promoted from _working/, new areas added):
+   - Update the Structure section with current folders and file counts
+   - Update Key Files if significant files were added or promoted
+   - Use Edit tool for surgical updates — don't rewrite the entire README
+4. If no structural changes: skip
+
+**Do NOT update README for routine content changes** (editing existing files, updating _brain/ state). Only structural changes warrant a README update.
 
 ---
 

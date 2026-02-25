@@ -155,14 +155,15 @@ cd ~/Desktop/alive/04_Ventures/acme-agency/
   └─ Working directory set
 ```
 
-## Step 3: Load Context (MANDATORY — All 3 Files)
+## Step 3: Load Context (MANDATORY — All 4 Files)
 
-**You MUST read all 3 files. Do not skip any.**
+**You MUST read all 4 files. Do not skip any.**
 
 Read in order:
 1. `{unit}/_brain/status.md` — Unit summary and state of play
 2. `{unit}/_brain/tasks.md` — Work queue
-3. `{unit}/_brain/changelog.md` — **First 200 lines** (recent session history)
+3. `{unit}/README.md` — Unit structure and key files
+4. `{unit}/_brain/changelog.md` — **First 200 lines** (recent session history)
 
 **The changelog is CRITICAL.** It contains:
 - What happened in recent sessions
@@ -179,6 +180,9 @@ Read in order:
 
 ▸ reading 04_Ventures/acme/_brain/tasks.md
   └─ 7 tasks, 2 @urgent
+
+▸ reading 04_Ventures/acme/README.md
+  └─ Structure loaded
 
 ▸ reading 04_Ventures/acme/_brain/changelog.md (first 200 lines)
   └─ Last session: 2026-02-04 — Plugin UI updates
